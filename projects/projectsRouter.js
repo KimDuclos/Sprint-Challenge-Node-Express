@@ -52,8 +52,9 @@ router.get('/api/projects/actions/:id', async (req, res) => {
       const project = projects.find(project => `${project.id}` === id);
 
       if (!project) {
-        // return res.status(404).json({ errorMessage: 'Project not found' });
-        return res.redirect('http://m404.ytmnd.com/') // vintage easter egg just because I wanted to try something different
+        // uncomment below for a boring ol' regular status code
+        // return res.status(404).json({ errorMessage: 'Project not found' }); 
+        return res.redirect('http://m404.ytmnd.com/') // vintage easter egg just because I wanted to try something different (pssst will not be as fun in PostMan)
       }
       projectDb
         .getProjectActions(id)

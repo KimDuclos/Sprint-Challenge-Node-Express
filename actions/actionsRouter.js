@@ -1,14 +1,14 @@
 const express = require("express");
-const actionDb = require("../data/helpers/actionModel");
+const actionsDB = require("../data/helpers/actionModel");
 
 const router = express.Router();
 
 // GET
 router.get("/", async (req, res) => {
   try {
-    const actions = await actionDb.get(); 
-    res.status(200).json(actions);
-  } catch (error) {
+    const actions = await actionsDB.get(); // get actions
+    res.status(200).json(actions);  // OK
+  } catch (error) { // catch all
     res.status(500).json({ errorMessage: "The action could not be retrieved from the database." });
   }
 });
@@ -16,7 +16,7 @@ router.get("/", async (req, res) => {
 // GET :id
 router.get("/api/actions/:id", async (req, res) => {
   try {
-    actionDb
+    actionsDB
     .get()
     .then(actions => {
       const { id } = req.params;
@@ -24,13 +24,13 @@ router.get("/api/actions/:id", async (req, res) => {
       if (!action) {
         return res.status(404).json({ errorMessage: "action not found." });
       }
-      actionDb
+      actionsDB  
         .get(id)
         .then(action => {
-          res.status(200).json(action);
+          res.status(200).json(action);  // OK
         })
         .catch(error => {
-          res.status(500).json({ errorMessage: "The action could not be retrieved from the database." });
+          res.status(500).json({ errorMessage: "The action could not be retrieved from the database." }); 
         });
     });
   } catch (error) {
@@ -46,7 +46,7 @@ router.post("/api/actions/", async (req, res) => {
     res.status(400).json({ errorMessage: "Please provide a Project ID, description and notes for this action." });
   } else {
     try {
-      const newAction = await actionDb.insert(actionData);
+      const newAction = await actionsDB.insert(actionData);
       res.status(201).json(newAction);
     } catch (error) {
       res.status(500).json({ errorMessage: "The action could not be saved to the database." });
@@ -57,7 +57,7 @@ router.post("/api/actions/", async (req, res) => {
 // DELETE :id
 router.delete("/api/actions/:id", (req, res) => {
   const { id } = req.params;
-  actionDb
+  actionsDB
     .remove(id)
     .then(deletedAction => {
       deletedAction
@@ -72,7 +72,7 @@ router.delete("/api/actions/:id", (req, res) => {
 // PUT :id
 router.put("/api/actions/:id", async (req, res) => {
   try {
-    actionDb.get().then(actions => {
+    actionsDB.get().then(actions => {
       const { id } = req.params;
       const changes = req.body;
       const action = actions.find(action => `${action.id}` === id);
@@ -80,7 +80,7 @@ router.put("/api/actions/:id", async (req, res) => {
       if (!action) {
         return res.status(404).json({ errorMessage: "This action is not found." });
       } else {
-        actionDb.update(id, changes);
+        actionsDB.update(id, changes);
         res.status(200).json({ errorMessage: "This action has been udpated." });
       }
     });
